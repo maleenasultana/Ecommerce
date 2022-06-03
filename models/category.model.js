@@ -6,11 +6,12 @@
  * 2.name
  * 3.description
  */
-const {sequelize, Sequelize}=require(".");
 
-module.exports=(sequelize,Sequelize)=>{
 
-const Category = Sequelize.define("category",{
+module.exports=(sequelize,Sequelize) => {
+
+const Category = Sequelize.define("category", {
+
       id: {
             type:Sequelize.INTEGER,
             primarykey: true,
@@ -23,6 +24,12 @@ const Category = Sequelize.define("category",{
       description: {
             type: Sequelize.STRING
       }
+},
+
+
+   {
+      tableName: 'categories'
    });
+
  return Category;
 }

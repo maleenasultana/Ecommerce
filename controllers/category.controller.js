@@ -32,52 +32,57 @@ exports.create=(req,res)=>{
       };
       Category.create(category)
       .then(category=>{
-            console.log(`category name: [$category.name]got inserted`);
+            console.log(`category name: [$category.name]got inserted in the DB`);
             res.status(201).send(category);
 
       })
       .catch(err =>{
-            console.log(`Issue in inserting category name: [${category}]`)
+            console.log(`Issue in inserting category name: [${category.name}]`)
             console.log(`Error Message : ${err.message}`)
             res.status(500).send({
-                  message:"Some internal error while storing the category"
+                  message:"Some internal error while storing the category!"
             })
       })
 }
 /**
- * get a list of all the catogories
+ * Get a list of all the catogories
  */
 
-exports.findAll= (req,res)=>{
+exports.findAll = (req,res)=>{
       let categoryName= req.query.name;
       let promise;
       if(categoryName){
-            promise= Category.findAll({
-                  where:{
-                        name:categoryName
+            promise = Category.findAll({
+                  where: {
+                        name: categoryName
                   }
             });
       }else{
-            promise =CategoryfindAll();
+            promise = CategoryfindAll();
       }
       promise
-      .then(categories=>{
+      .then(categories => {
             res.status(200).send(categories);
       })
       .catch(err=>{
             res.status(500).send({
-                  message: "Some internal error while fetching the category"
+                  message: "Some internal error while fetching the categories"
             })
       })
 }
 /**
- * get a category based on the category id
+ * Get a category based on the category id
  */
 exports.findOne=(req,res)=>{
       const categoryId= req.params.id;//1
 
       Category.findByPk(categoryId)
       .then(category => {
+            if(!category){
+                  return res.status(404).json({
+                        message: 'Category not found'
+                  })
+            }
             res.status(200).send(category);
       })
       .catch(err =>{
@@ -97,7 +102,7 @@ exports.update = (req,res) => {
       };
       const categoryId= req.params.id
 
-      Category.update(category,{
+      Category.update(category, {
             where: {id: categoryId}
       })
       .then(updatedCategory =>{
@@ -120,8 +125,30 @@ exports.update = (req,res) => {
       .catch(err =>{
             //where the updation task failed.
             res.status(500).send({
-                  message: "Some internal error while updating the category "
+                  message: "Some internal error while updating the category based on id "
             })
       })
 }
+/**
+ * Delete an existing category based on category name
+ */
 
+exports.delete=(req,res) => {
+      const categoryId =req.params.id;
+      Category.destroy({
+            where: {
+                  id: categoryId
+            }
+      })
+
+.then(result =>{
+ res.status(200).send({
+        message: "Successfully deleted the category"
+    })
+})
+.catch(err =>{
+      res.status(500).send({
+            message: "Some internal error while deleting the category based on id"
+      })
+   })
+}

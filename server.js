@@ -1,66 +1,56 @@
-const express= require('express');
-const bodyParser=require('body-parser');
-const serverConfig= require('./configs/server.config');
+const expresss = require('express');
+const serverConfig = require('./configs/server.config');
+const bodyParser = require('body-parser');
 
-
-//initialising express
-const app = express();
+//intialising express
+const app = expresss();
 
 /**
- * Using the bodyparser middleware
+ * Using the body parser middleware
  * 
- * used for parsing the request
- * parsing the request of the type json and convert that to object
- */
-
-
-app.use(bodyParser.urlencoded({ extended: true}));
+ * Used for parsing the request
+ * Parsing the request of the type json and convert that to object
+ * 
+*/
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 /**
- * initialising the database
- */
-
-const db=require(".models");
-const Category = db.category;
-
+ * Initialising the database
+*/
+const db = require('./models');;
+const category = db.category;
 
 db.sequelize.sync({force: true})
-.then(()=> {
-      console.log('tables dropped and created');
-      init();
+.then(() => {
+    console.log('tables dropped and created');
+    init();
 })
 
+function init() {
+    var categories = [
+        {
+            name: "Electronics",
+            description: "This category will contain all the electronic products"
+        }, 
+        {
+            name: "KitchenItems",
+            description: "This category will contain all the kitchen products"
+        }];
 
-function init(){
-      //initializing few catogories
-      var categories =[
-            {
-                  name: "Electronics",
-                  description: "This category will contain all the electronic products"
-            },
-            {
-                  name: "KitchenItems",
-                  description: "This category will contain all the Kitchen  products"
-            }];
-
-      Category.bulkCreate(categories)
-      .then(()=> {
-            console.log("Category table is initialized");
-      })
-      .catch(err =>{
-        console.log("Error while initializing catogories table");
-      })
+        category.bulkCreate(categories)
+        .then(() => {
+            console.log("Category table initialised");
+        })
+        .catch(err => {
+            console.log("Error while initialising categories table");
+        })
 }
 
-/**
- * Importing the routes and using it
- */
+require('./routes/category.routes')(app)
+require('./routes/product.routes')(app)
 
-require('./routes/category.routes')(app);
-
-//starting the server
 
 app.listen(serverConfig.PORT, () => {
-      console.log(`Application started on the port no : ${serverConfig.PORT}`);
+    console.log(`Application started on the port no : ${serverConfig.PORT}`)
 })

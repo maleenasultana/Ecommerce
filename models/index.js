@@ -17,7 +17,7 @@ const Sequelize = require("sequelize");
  * creating the db connection
  */
 
-const sequelize = new  Sequelize(
+const seq = new  Sequelize(
       config.DB,
       config.USER,
       config.PASSWORD,
@@ -28,15 +28,17 @@ const sequelize = new  Sequelize(
 );
 const db = {};
 db.Sequelize = Sequelize;
-db.sequelize = sequelize;
+db.sequelize = seq;
 db.category = require('./category.model.js')(db.sequelize,Sequelize);
 db.product =require('./product.model.js')(db.sequelize,Sequelize);
 /**
  * db={
  * Sequelize:
  * sequelize:
- * category:
+ * category: function(){
+ * 
  * }
+ * 
  * product: function(){
  * 
  * }

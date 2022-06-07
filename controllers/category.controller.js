@@ -17,12 +17,7 @@ exports.create=(req,res)=>{
       /**
        * validation of request body
        */
-      if(!req.body.name){
-            res.status(400).send( {
-                  message:"Name of the category can't be empty!"
-            })
-            return ;
-      }
+      
       /**
        * creation of the category  object  to be stored in the db.
        */

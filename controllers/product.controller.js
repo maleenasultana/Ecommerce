@@ -8,6 +8,7 @@
 //const { product } = require("../models");
 const db = require("../models");
 const Product = db.product;
+const Op = db.Sequelize.Op;
 
 /**
  * Create and save a new product
@@ -18,24 +19,25 @@ exports.create = (req, res) => {
      * Validation of the request body
     */
 
-    if(!req.body.name) {
-        res.status(400).send({
-            message: "Name of the product can't be empty !"
-        })
-        return;
-    }
+    // if(!req.body.name) {
+    //     res.status(400).send({
+    //         message: "Name of the product can't be empty !"
+    //     })
+    //     return;
+    // }
 
-    if(!req.body.cost) {
-        res.status(400).send({
-            message: "Cost of the product can't be empty !"
-        })
-        return;
-    }
+    // if(!req.body.cost) {
+    //     res.status(400).send({
+    //         message: "Cost of the product can't be empty !"
+    //     })
+    //     return;
+    // }
 
     const product = {
         name: req.body.name,
         description: req.body.description,
-        cost: req.body.cost
+        cost: req.body.cost,
+        categoryId: req.body.categoryId
     }
 
     Product.create(product)
@@ -57,8 +59,10 @@ exports.create = (req, res) => {
 
 exports.findAll = (req, res) => {
 
-    console.log(req.query);
+  
     let productName = req.query.name;
+    let minCost = req.query.minCost;//null
+    let maxCost= req.query.maxCost;//null
     let promise;
 
     if(productName) {
@@ -67,8 +71,35 @@ exports.findAll = (req, res) => {
                 name: productName
             }
         })
+    }else if(minCost && maxCost){
+      
+        promise = Product.findAll({
+            where: {
+                cost: {
+                    [Op. gte]: minCost,
+                    [Op.lte]:maxCost
+                }
+            }
+        })
+    }else if(minCost){
+        promise =Product.findAll({
+            where: {
+                cost: {
+                    [Op.gte] : minCost
+                }
+            }
+        })
+    }else if(maxCost) {
+        promise = Product.findAll({
+            where: {
+                cost: {
+                    [Op.lte] : maxCost
+                }
+            }
+        })
+
     }else{
-        promise = Product.findAll();
+        promise =Product.findAll();
     }
     promise
     .then(products => {
@@ -107,17 +138,17 @@ exports.findOne = (req, res) => {
 
 exports.update = (req, res) => {
 
-    if(!req.body.name) {
-        res.status(400).send({
-            message: "Name of the product cannot be empty"
-        })
-    }
+    // if(!req.body.name) {
+    //     res.status(400).send({
+    //         message: "Name of the product cannot be empty"
+    //     })
+    // }
     
-    if(!req.body.cost) {
-        res.status(400).send({
-            message: "Cost of the product cannot be empty"
-        })
-    }
+    // if(!req.body.cost) {
+    //     res.status(400).send({
+    //         message: "Cost of the product cannot be empty"
+    //     })
+    // }
 
     const product = {
         name: req.body.name,

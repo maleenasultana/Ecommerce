@@ -20,6 +20,9 @@ app.use(bodyParser.json());
 */
 const db = require("./models");
 const Category = db.category;
+const product= db.product;
+
+Category.hasMany(product);//this will create a foreign key column(categoryid )in product table
 
 db.sequelize.sync({force: true})
 .then(() => {

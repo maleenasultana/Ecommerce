@@ -18,8 +18,8 @@ app.use(bodyParser.json());
 /**
  * Initialising the database
 */
-const db = require('./models');;
-const category = db.category;
+const db = require("./models");
+const Category = db.category;
 
 db.sequelize.sync({force: true})
 .then(() => {
@@ -38,7 +38,7 @@ function init() {
             description: "This category will contain all the kitchen products"
         }];
 
-        category.bulkCreate(categories)
+        Category.bulkCreate(categories)
         .then(() => {
             console.log("Category table initialised");
         })

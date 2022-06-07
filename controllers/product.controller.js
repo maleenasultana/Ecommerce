@@ -5,12 +5,12 @@
 */
 
 
-const { product } = require("../models");
+//const { product } = require("../models");
 const db = require("../models");
 const Product = db.product;
 
 /**
- * Create and save a new producy
+ * Create and save a new product
 */
 exports.create = (req, res) => {
 

@@ -58,7 +58,7 @@ exports.findAll = (req,res)=>{
                   }
             });
       }else{
-            promise = CategoryfindAll();
+            promise = Category.findAll();
       }
       promise
       .then(categories => {

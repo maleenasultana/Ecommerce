@@ -1,7 +1,7 @@
 /**
  * This file will contain the routing logic for the catrgory controller
  */
-const { findAll } = require("sequelize/lib/model");
+//const { findAll } = require("sequelize/lib/model");
 const  categoryController = require("../controllers/category.controller")
 
 module.exports = function(app) {
@@ -10,7 +10,7 @@ module.exports = function(app) {
 app.post("/ecomm/api/v1/categories" , categoryController.create);
 
 //route for the GET request to fetch all the categories
-app.get("/ecomm/api/v1/categories", categoryController, findAll);
+app.get("/ecomm/api/v1/categories", categoryController.findAll);
 
 //route for the GET request to fetch a category based on category id
 app.get("/ecomm/api/v1/categories/:id",categoryController.findOne);

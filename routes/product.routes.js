@@ -16,4 +16,5 @@ module.exports = function(app) {
 
     app.delete("/ecomm/api/v1/products/:id", productController.delete);
 
+    app.get("/ecomm/api/v1/categories/:categoryId/products", productController.getProductsUnderCategory);
 }

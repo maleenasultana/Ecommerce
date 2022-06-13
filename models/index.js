@@ -49,7 +49,7 @@ db.role.belongsToMany(db.user, {
       foreignKey: "userId"
   })
 
-
+ db.Role =["user","admin"]
 
 
 module.exports = db;

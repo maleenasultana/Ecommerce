@@ -138,17 +138,7 @@ exports.findOne = (req, res) => {
 
 exports.update = (req, res) => {
 
-    // if(!req.body.name) {
-    //     res.status(400).send({
-    //         message: "Name of the product cannot be empty"
-    //     })
-    // }
     
-    // if(!req.body.cost) {
-    //     res.status(400).send({
-    //         message: "Cost of the product cannot be empty"
-    //     })
-    // }
 
     const product = {
         name: req.body.name,

@@ -3,13 +3,13 @@ const db = require("../models");
 const Category = db.category;
 
 const ValidateCategoryRequest =(req, res, next) => {
-    if(!req.body.name) {
-        res.status(400).send({
-            message: "Name of category can't be empty!"
-        })
-      }
+    // if(!req.body.name) {
+    //     res.status(400).send({
+    //         message: "Name of category can't be empty!"
+    //     })
+    //   }
 
-     next();
+    //  next();
     }
     const ValidateProductRequest =(req, res, next) => {
         if(!req.body.name) {

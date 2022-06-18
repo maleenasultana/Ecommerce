@@ -1,7 +1,7 @@
 /**
  * This file will contain the routes logic for the Product resource
 */
-const {requestValidator,authJwt} = require("../middlewares");
+const {requestValidator, authJwt} = require("../middlewares");
 const productController = require("../controllers/product.controller")
 
 module.exports = function(app) {

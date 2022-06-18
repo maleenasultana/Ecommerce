@@ -21,6 +21,8 @@ verifyToken = (req, res, next) => {
           message: "Unauthorized!"
         });
       }
+      console.log("decoded");
+      console.log("decoded");
       req.userId = decoded.id;
       next();
     })
@@ -31,7 +33,8 @@ isAdmin = (req, res, next) => {
 
     User.findByPk(req.userId)
     .then(user => {
-
+console.log("Userssss");
+console.log(user);
         user.getRoles()
         .then(roles => {
           for (let i = 0; i < roles.length; i++) {
@@ -43,7 +46,7 @@ isAdmin = (req, res, next) => {
             }
           }
           res.status(403).send({
-            message: "Require Admin Role!"
+            message: "Required Admin Role!"
           });
           return;
         });

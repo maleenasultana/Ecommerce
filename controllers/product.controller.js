@@ -5,33 +5,15 @@
 */
 
 
-//const { product } = require("../models");
+const { product } = require("../models");
 const db = require("../models");
 const Product = db.product;
 const Op = db.Sequelize.Op;
 
 /**
- * Create and save a new product
+ * Create and save a new producy
 */
 exports.create = (req, res) => {
-
-    /**
-     * Validation of the request body
-    */
-
-    // if(!req.body.name) {
-    //     res.status(400).send({
-    //         message: "Name of the product can't be empty !"
-    //     })
-    //     return;
-    // }
-
-    // if(!req.body.cost) {
-    //     res.status(400).send({
-    //         message: "Cost of the product can't be empty !"
-    //     })
-    //     return;
-    // }
 
     const product = {
         name: req.body.name,
@@ -59,10 +41,9 @@ exports.create = (req, res) => {
 
 exports.findAll = (req, res) => {
 
-  
     let productName = req.query.name;
-    let minCost = req.query.minCost;//null
-    let maxCost= req.query.maxCost;//null
+    let minCost = req.query.minCost; //null
+    let maxCost = req.query.maxCost; //null
     let promise;
 
     if(productName) {
@@ -71,18 +52,17 @@ exports.findAll = (req, res) => {
                 name: productName
             }
         })
-    }else if(minCost && maxCost){
-      
+    }else if(minCost && maxCost) {
         promise = Product.findAll({
             where: {
                 cost: {
-                    [Op. gte]: minCost,
-                    [Op.lte]:maxCost
+                    [Op.gte] : minCost,
+                    [Op.lte]: maxCost
                 }
             }
         })
-    }else if(minCost){
-        promise =Product.findAll({
+    }else if(minCost) {
+        promise = Product.findAll({
             where: {
                 cost: {
                     [Op.gte] : minCost
@@ -97,9 +77,9 @@ exports.findAll = (req, res) => {
                 }
             }
         })
-
-    }else{
-        promise =Product.findAll();
+    }
+    else{
+        promise = Product.findAll();
     }
     promise
     .then(products => {
@@ -138,13 +118,11 @@ exports.findOne = (req, res) => {
 
 exports.update = (req, res) => {
 
-    
-
     const product = {
         name: req.body.name,
         description: req.body.description,
         cost: req.body.cost,
-        categoryId:req.body.categoryId
+        categoryId: req.body.categoryId
     }
 
     const productId = req.params.id;
@@ -187,7 +165,11 @@ exports.delete = (req, res) => {
         })
     })
 }
-//get the list of all the products under a category
+
+
+/** 
+ * Get the list of all the products under a category 
+ */
 
 exports.getProductsUnderCategory = (req, res) => {
     const categoryId = parseInt(req.params.categoryId);

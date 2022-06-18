@@ -1,106 +1,102 @@
-
-const db =require("../models");
-const Product =db.product;
-const Cart =db.cart;
+const db = require("../models");
+const Product = db.product;
+const Cart = db.cart;
 const Op = db.Sequelize.Op;
 
-exports.create = (req, res)=> {
-    const cart = {
-         userId: req.userId// we are getting this from middleware
 
+exports.create = (req, res) => {
+
+    const cart = {
+        userId: req.userId // we are getting this id from middleware
     };
 
     Cart.create(cart)
     .then(cart => {
         res.status(201).send(cart);
-
     })
     .catch(err => {
         res.status(500).send({
-            message: " Some internal server error happened"
+            message: "Some internal server error happened"
         })
     })
 }
-exports.update= (req,res)=>{
 
-const cartId =req.params.id;
 
-Cart.findByPk(cartId)
-.then(cart => {
-    Product.findAll({
-        where: {
-            id: req.body.productIds
-        }
-    })
-    .then(items => {
-        if(!items){
-            res.status(400).send({
-                message: "Items trying to add does not exist"
-            })
-        }
-        cart.setProducts(items)
-        .then(()=> {
-            var cost = 0;
-            const ProductSelected = [];
-            cart.getProducts().then(products=>{
+exports.update = (req, res) => {
 
-                for(i = 0; i < products.length; i++){
-                    cost = cost + products[i].cost;
-                    ProductSelected.push({
-                      id: products[i].id,
-                      name: products[i].name,
-                      cost: products[i].cost  
+    const cartId = req.params.id;
 
-                    });
-                }
-                res.status(200).send({
-                    id: cart.id,
-                    productSelected: ProductSelected,
-                    cost: cost
+    Cart.findByPk(cartId)
+    .then(cart => {
+        Product.findAll({
+            where: {
+                id: req.body.productIds
+            }
+        })
+        .then(items => {
+            if(!items) {
+                res.status(400).send({
+                    message: "Items trying to add does not exist"
+                })
+            }
+
+            cart.setProducts(items)
+            .then(() => {
+                var cost = 0;
+                const ProductSelected = [];
+                cart.getProducts().then(products => {
+
+                    for(i = 0; i < products.length; i++) {
+                        cost = cost + products[i].cost;
+                        ProductSelected.push({
+                            id: products[i].id,
+                            name: products[i].name,
+                            cost: products[i].cost
+                        });
+                    }
+
+                    res.status(200).send({
+                        id: cart.id,
+                        productSelected: ProductSelected,
+                        cost: cost
+                    })
                 })
             })
         })
+        .catch(err => {
+            res.status(500).send({
+                message: "Some internal server error happened while fetching Product details"
+            })
+        })
     })
     .catch(err => {
         res.status(500).send({
-            message: "some internal server error happened while fetching the product details"
-
+            message: "Some internal server error happened while fetching cart details"
         })
     })
-})
-.catch(err => {
-    res.status(500).send({
-        message: "some internal server error happened while fetching the cart details "
-       })
-    })
-
 }
 
-exports.getCart =(req,res) => {
+exports.getCart = (req, res) => {
 
-Cart.findByPk(req.params.cartId).then(cart => {
-    var cost =0;
+    Cart.findByPk(req.params.cartId).then(cart => {
+        var cost = 0;
+        const ProductSelected = [];
+        cart.getProducts().then(products => {
 
-    const ProductSelected =[];
+            for(i = 0; i < products.length; i++) {
+                cost = cost + products[i].cost;
+                ProductSelected.push({
+                    id: products[i].id,
+                    name: products[i].name,
+                    cost: products[i].cost
+                });
+            }
 
-    cart.getProducts().then(products=>{
-
-        for(i = 0; i < products.length; i++){
-
-            cost  =cost + products[i].cost;
-
-            ProductSelected.push({
-
-              id: products[i].id,
-              name: products[i].name,
-              cost: products[i].cost  
-            });
-        }
-        res.status(200).send({
-            id: cart.id,
-            productSelected: ProductSelected,
-            cost: cost
-           })
-       })
-   })
+            res.status(200).send({
+                id: cart.id,
+                productSelected: ProductSelected,
+                cost: cost
+            })
+        })
+    })
 }

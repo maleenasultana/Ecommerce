@@ -9,7 +9,7 @@ const ValidateCategoryRequest =(req, res, next) => {
     //     })
     //   }
 
-    //  next();
+     next();
     }
     const ValidateProductRequest =(req, res, next) => {
         if(!req.body.name) {

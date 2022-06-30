@@ -6,49 +6,48 @@ const User = db.user;
 
 verifyToken = (req, res, next) => {
 
-    let token = req.headers["x-access-token"];//get access to the token passed by the user
-  
-    if (!token) {     //if no token passed by user, throw error.
+    let token = req.headers["x-access-token"]; //get access to the token passed by the user
 
-      return res.status(403).send({
-        message: "No token provided!"
-      });
-    }
-  //do the verification of the token
-    jwt.verify(token, config.secret, (err, decoded) => {
-      if (err) {
-        return res.status(401).send({
-          message: "Unauthorized!"
+    if(!token) { // if no token passed by user, throw error. 
+        return res.status(403).send({
+            message: "No token provided!"
         });
-      }
-      console.log("decoded");
-      console.log("decoded");
-      req.userId = decoded.id;
-      next();
+    }
+
+    //Do the verification of the token
+    jwt.verify(token, config.secret, (err, decoded) => {
+        if(err) {
+            return res.status(401).send({
+                message: "Unathorised!"
+            });
+        }
+        console.log("decoded");
+        console.log(decoded);
+        req.userId = decoded.id;
+        next();
     })
 }
 
-//check whether the user who hit the API is admin or not.
+//Check whether the user who hit the API is admin or not. 
 isAdmin = (req, res, next) => {
 
     User.findByPk(req.userId)
     .then(user => {
-console.log("Userssss");
-console.log(user);
-        user.getRoles()
+        console.log("Userssss")
+        console.log(user);
+        user.getRoles() 
         .then(roles => {
-          for (let i = 0; i < roles.length; i++) {
-            if (roles[i].name === "admin") {
-
-              next();
-
-              return;
+            for(let i = 0; i < roles.length; i++) {
+                if(roles[i].name === "admin") {
+                    next();
+                    return;
+                }
             }
-          }
-          res.status(403).send({
-            message: "Required Admin Role!"
-          });
-          return;
+
+            res.status(403).send({
+                message: "Required Admin Role"
+            });
+            return;
         });
     });
 };
@@ -58,4 +57,4 @@ const authJwt = {
     isAdmin: isAdmin
 };
 
-module.exports = authJwt; 
+module.exports = authJwt;

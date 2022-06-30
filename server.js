@@ -2,7 +2,6 @@ const expresss = require('express');
 const serverConfig = require('./configs/server.config');
 const bodyParser = require('body-parser');
 
-
 //intialising express
 const app = expresss();
 
@@ -20,13 +19,11 @@ app.use(bodyParser.json());
  * Initialising the database
 */
 const db = require("./models");
-
 const Category = db.category;
-const product= db.product;
+const Product = db.product;
 const Role = db.role;
 
-
-Category.hasMany(product);//this will create a foreign key column(categoryid )in product table
+Category.hasMany(Product); //This will create a foreign key column (categoryId) in product table
 
 db.sequelize.sync({force: true})
 .then(() => {
@@ -54,24 +51,23 @@ function init() {
         })
 
         /**
-         * Adding roles
-         */
-
+         * Adding Roles
+        */
         Role.create({
-         id: 1,
-         name:"User"
-      });
+            id: 1,
+            name: "user"
+        });
         Role.create({
-       id: 2,
-        name:"admin"
-    })
-
+            id: 2,
+            name: "admin"
+        })
 }
 
 require('./routes/category.routes')(app)
 require('./routes/product.routes')(app)
 require('./routes/auth.routes')(app)
 require('./routes/cart.routes')(app)
+
 
 app.listen(serverConfig.PORT, () => {
     console.log(`Application started on the port no : ${serverConfig.PORT}`)

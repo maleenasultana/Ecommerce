@@ -10,6 +10,10 @@ module.exports=(sequelize, Sequelize) => {
         },
         cost: {
             type: Sequelize.INTEGER
+        // },
+        // status: {// for testing added
+        //     type: Sequelize.STRING,
+        //     allowNull:false
         }
     });
     return Cart;

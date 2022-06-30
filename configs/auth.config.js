@@ -1,3 +1,3 @@
-module.exports ={
+module.exports = {
     secret:"Maleena-secret-key"
 }

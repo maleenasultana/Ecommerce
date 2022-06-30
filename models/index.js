@@ -10,64 +10,53 @@
 * module name.
 *
 */
-const config = require("../configs/db.config");
+const env = process.env.NODE_ENV || 'development';//env==>production,developmentgit ad
+const config = require("../configs/db.config")[env];
 const Sequelize = require("sequelize");
 
 /**
- * creating the db connection
+ * Creating the DB connection
  */
-
-const seq = new  Sequelize(
-      config.DB,
-      config.USER,
-      config.PASSWORD,
-      {
-            host: config.HOST,
-            dialect: config.dialect
-      }
+const sequelize = new Sequelize(
+    config.DB,
+    config.USER,
+    config.PASSWORD,
+    {
+        host: config.HOST,
+        dialect: config.dialect,
+        operatorsAliases: false,
+        pool: {
+            max: config.pool.max,
+            min: config.pool.min,
+            acquire: config.pool.acquire,
+            idle: config.pool.idle
+        }
+    }
 );
+
 const db = {};
 db.Sequelize = Sequelize;
-db.sequelize = seq;
-db.category = require('./category.model.js')(db.sequelize,Sequelize);
-db.product = require('./product.model.js')(db.sequelize,Sequelize);
-db.user = require('./user.model.js')(db.sequelize, Sequelize);
-db.role = require('./role.model.js')(db.sequelize, Sequelize);
-db.cart = require("./cart.model.js")(db.sequelize,Sequelize);
+db.sequelize = sequelize;
+db.category = require('./category.model.js')(sequelize, Sequelize);
+db.product = require('./product.model.js')(sequelize, Sequelize);
+db.user = require('./user.model.js')(sequelize, Sequelize);
+db.role = require('./role.model.js')(sequelize, Sequelize);
 
-/** 
- * Establish the relationship between Role and the User: Many to Many
-*/
-
+/**
+   * Establishing the relationship between Role and User
+   */
 db.role.belongsToMany(db.user, {
-      through: "user_roles",
-      foreignKey: "roleId",
-  })
-  
-  db.user.belongsToMany(db.role, {
-      through: "user_roles",
-      foreignKey: "userId"
-  })
+    through: "user_roles",
+    foreignKey: "roleId",
+    otherKey: "userId"
+});
+db.user.belongsToMany(db.role, {
+    through: "user_roles",
+    foreignKey: "userId",
+    otherKey: "roleId"
+});
 
-  /**
-   * relationship between cart and product: Many to Many
-   */
-  db.product.belongsToMany(db.cart, {
-      through: "cart_products",
-      foreignKey: "productId"
-  });
-
-  db.cart.belongsToMany(db.product, {
-      through: "cart_products",
-      foreignKey: "cartId"
-  })
-  
-  /**
-   * relationship between cart and user:
-   */
-  db.user.hasMany(db.cart);
-
- db.ROLES = ["user","admin"]
+db.ROLES = ["user", "admin"];
 
 
 module.exports = db;
